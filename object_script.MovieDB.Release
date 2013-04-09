@@ -1,0 +1,12 @@
+INPUT(
+./release\main.o
+./release\mainwindow.o
+./release\movie.o
+./release\moviefile.o
+./release\qlistdialog.o
+./release\database.o
+./release\querytmdb.o
+./release\moc_mainwindow.o
+./release\moc_querytmdb.o
+./release\moc_qlistdialog.o
+);

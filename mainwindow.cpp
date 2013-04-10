@@ -24,7 +24,7 @@
 
 MainWindow::MainWindow() : QWidget()
 {
-    Database::toSqlString("l'air");
+    Database::toSqlString("Le 26 avril 2003, Aron Ralston, jeune homme de vingt-sept ans, se met en route pour une randonnée dans les gorges de l’Utah.Il est seul et n’a prévenu personne de son excursion. Alpiniste expérimenté, il collectionne les plus beaux sommets de la région.Pourtant, au fin fond d’un canyon reculé, l’impensable survient : au-dessus de lui un rocher se détache et emprisonne son bras dans le mur de rocaille. Le voilà pris au piège, menacé de déshydratation et d’hypothermie, en proie à des hallucinations…Il parle à son ex petite amie, sa famille, et se demande si les deux filles qu’il a rencontrées dans le canyon juste avant son accident seront les dernières. Cinq jours plus tard, comprenant que les secours n’arriveront pas, il va devoir prendre la plus grave décision de son existence...");
     sqlDb = new Database("data1.db");
 
     DB = new QList<Movie>(sqlDb->getMovieList());

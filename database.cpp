@@ -67,7 +67,7 @@ Movie Database::getMovie(QString title) {
 
 bool Database::insertMovie(Movie m) {
     QSqlQuery insertQuery;
-    insertQuery.prepare("INSERT INTO movieDB (tmdb_ID, title, originalTitle, Year, Runtime, Synopsis) VALUES ("
+     return insertQuery.exec("INSERT INTO movieDB (tmdb_ID, title, originalTitle, Year, Runtime, Synopsis, filePath) VALUES ("
             + QString::number(m.getTmdbId()) + ", '"
             + toSqlString(m.getTitle()) + "',"
             + toSqlString(m.getOriginalTitle()) + "',"
@@ -75,7 +75,7 @@ bool Database::insertMovie(Movie m) {
             + QString::number(m.getRuntime()) +",'"
             + toSqlString(m.getSynopsis()) + "');");
 
-    qDebug() << "INSERT INTO movieDB (tmdb_ID, title, originalTitle, Year, Runtime, Synopsis) VALUES ("
+    /*qDebug() << "INSERT INTO movieDB (tmdb_ID, title, originalTitle, Year, Runtime, Synopsis) VALUES ("
                 + QString::number(m.getTmdbId()) + ", '"
                 + toSqlString(m.getTitle()) + "','"
                 + toSqlString(m.getOriginalTitle()) + "',"
@@ -83,16 +83,15 @@ bool Database::insertMovie(Movie m) {
                 + QString::number(m.getRuntime()) +",'"
                 + toSqlString(m.getSynopsis()) + "');";
 
-    if(insertQuery.exec()) {
-       // qDebug() << insertQuery.lastError().databaseText();
-        return true;
-    }
-    else return false;
+
+    return insertQuery.exec();*/
+
 
 }
 
 QString Database::toSqlString(QString a){
     a.replace(QString("'"), QString("''"));
+    a.replace(QString("’"), QString("''"));
     qDebug() << "ToSqlQuery" << a;
     return a;
 }

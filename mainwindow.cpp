@@ -24,6 +24,7 @@
 
 MainWindow::MainWindow() : QWidget()
 {
+    Database::toSqlString("l'air");
     sqlDb = new Database("data1.db");
 
     DB = new QList<Movie>(sqlDb->getMovieList());
@@ -85,8 +86,6 @@ MainWindow::MainWindow() : QWidget()
 
     QObject::connect(liste,SIGNAL(doubleClicked(QModelIndex)), this, SLOT(listeClicked(QModelIndex)));
     QObject::connect(itemModel, SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(changeItem(QModelIndex,QModelIndex)));
-
-   // QObject::connect(liste, SIGNAL(pressed(QModelIndex)),this, SLOT(listeClicked(QModelIndex)));
 }
 
 
@@ -151,17 +150,10 @@ void MainWindow::enregistrer()
 }
 
 
-void MainWindow::insertMovie(Movie m)
-
-{
-
-    if(sqlDb->insertMovie(m))
-    {
-        qWarning() << "Fermeture DB";
-
+void MainWindow::insertMovie(Movie m) {
+    if(!sqlDb->insertMovie(m)){
+        qDebug() << "Erreur insertion film";
     }
-
-
 }
 
 
@@ -194,7 +186,7 @@ QString MainWindow::cleanName(QString fileName) {
     QStringList spamNames;
     spamNames << "FRENCH" << "TRUEFRENCH" << "BDRIP" << "DVDRIP" << "1080p" << "720p" << "XVID" << "HD" << "SD" << "MD" <<"R5" << "HDRip" << "TS" << "DVDscr";
     for(int i=0; i< spamNames.count(); i++){
-        qDebug() << "Searching for :" << spamNames.value(i);
+       // qDebug() << "Searching for :" << spamNames.value(i);
         if(firstSpamIndex > cleanedFileName.indexOf(spamNames.value(i),0, Qt::CaseInsensitive) && cleanedFileName.indexOf(spamNames.value(i),0, Qt::CaseInsensitive) != -1) {
             firstSpamIndex = cleanedFileName.indexOf(spamNames.value(i),0, Qt::CaseInsensitive);
         }
@@ -223,7 +215,7 @@ QString MainWindow::cleanName(QString fileName) {
         cleanedFileName.remove(cleanedFileName.count()-1,1);
     }
 
-    qDebug() << cleanedFileName;
+    //qDebug() << cleanedFileName;
 
    return cleanedFileName;
 

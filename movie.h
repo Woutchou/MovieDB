@@ -26,7 +26,8 @@ public:
 
     void setTMDB_ID(int id);
     int getTmdbId();
-
+    void setOriginalTitle(QString newTitle);
+    QString getOriginalTitle();
 
     void setYear(int y);
     int getYear();
@@ -35,6 +36,7 @@ public:
 private:
     int tmdbId;
     QString title;
+    QString originalTitle;
     int runtime;
     int year;
     QString synopsis;

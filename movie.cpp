@@ -9,14 +9,13 @@
 
 using namespace std;
 
-Movie::Movie() : title("Defaut title"), runtime(0), synopsis("Default synopsis")
-{
+Movie::Movie() : title("Defaut title"), runtime(0), synopsis("Default synopsis") {
 
 }
 
-Movie::Movie(QJsonObject newMovie)
-{
+Movie::Movie(QJsonObject newMovie) {
     title = newMovie.value(QString("title")).toString();
+    originalTitle = newMovie.value(QString("original_title")).toString();
     runtime = newMovie.value(QString("runtime")).toDouble();
     synopsis = newMovie.value(QString("overview")).toString();
     tmdbId = newMovie.value(QString("id")).toDouble();
@@ -24,16 +23,19 @@ Movie::Movie(QJsonObject newMovie)
 
 }
 
+void Movie::setOriginalTitle(QString newTitle) {
+    originalTitle = newTitle ;
+}
 
+QString Movie::getOriginalTitle() {
+    return originalTitle;
+}
 
-
-QString Movie::getTitle()
-{
+QString Movie::getTitle() {
     return title;
 }
 
-void Movie::setTitle(QString newTitle)
-{
+void Movie::setTitle(QString newTitle) {
     title = newTitle;
 }
 

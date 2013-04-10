@@ -9,11 +9,9 @@ using namespace std;
 
 Database::Database(QString DBname){
     database = QSqlDatabase::addDatabase("QSQLITE");
-    QErrorMessage *error;
-    error = new QErrorMessage();
-    error->showMessage("hi there");
-    error->show();
-    qDebug() << open(DBname);
+    if(!open(DBname)) {
+            qDebug() << "Error ouverture base de donnée";
+    }
 }
 
 bool Database::open(QString DBname) {
@@ -26,17 +24,15 @@ QList<Movie> Database::getMovieList(){
     QSqlQuery listQuery;
 
     if(!listQuery.exec("SELECT * FROM movie;")) {
-
-        QErrorMessage error;
-        error.showMessage(listQuery.lastError().databaseText());
         return response;
     }
 
     while(listQuery.next()) {
         Movie temp;
-        temp.setYear(listQuery.value(0).toInt());
-        temp.setTMDB_ID(listQuery.value(1).toInt());
-        temp.setTitle(listQuery.value(3).toString());
+        temp.setTMDB_ID(listQuery.value(0).toInt());
+        temp.setTitle(listQuery.value(1).toString());
+        temp.setOriginalTitle(listQuery.value(2).toString());
+        temp.setYear(listQuery.value(3).toInt());
         temp.setRuntime(listQuery.value(4).toInt());
         temp.setSynopsis(listQuery.value(5).toString());
 
@@ -49,7 +45,7 @@ QList<Movie> Database::getMovieList(){
 Movie Database::getMovie(QString title) {
     QSqlQuery getMovieQuery;
     Movie temp;
-    getMovieQuery.prepare("SELECT * FROM movieDB where Title LIKE '" + toSqlString(title) + "';");
+    getMovieQuery.prepare("SELECT * FROM movieDB where originalTitle LIKE '" + toSqlString(title) + "';");
 
 
     getMovieQuery.exec();
@@ -69,21 +65,34 @@ Movie Database::getMovie(QString title) {
     return temp;
 }
 
-bool Database::insertMovie(Movie m)
-{
+bool Database::insertMovie(Movie m) {
     QSqlQuery insertQuery;
-    insertQuery.prepare("INSERT INTO movieDB (Year, tmdb_ID, Title, Runtime, Synopsis) VALUES ("
-            + QString::number(m.getYear()) + ","
+    insertQuery.prepare("INSERT INTO movieDB (tmdb_ID, title, originalTitle, Year, Runtime, Synopsis) VALUES ("
             + QString::number(m.getTmdbId()) + ", '"
             + toSqlString(m.getTitle()) + "',"
+            + toSqlString(m.getOriginalTitle()) + "',"
+            + QString::number(m.getYear()) + ","
             + QString::number(m.getRuntime()) +",'"
             + toSqlString(m.getSynopsis()) + "');");
 
-    return insertQuery.exec();
+    qDebug() << "INSERT INTO movieDB (tmdb_ID, title, originalTitle, Year, Runtime, Synopsis) VALUES ("
+                + QString::number(m.getTmdbId()) + ", '"
+                + toSqlString(m.getTitle()) + "','"
+                + toSqlString(m.getOriginalTitle()) + "',"
+                + QString::number(m.getYear()) + ","
+                + QString::number(m.getRuntime()) +",'"
+                + toSqlString(m.getSynopsis()) + "');";
+
+    if(insertQuery.exec()) {
+       // qDebug() << insertQuery.lastError().databaseText();
+        return true;
+    }
+    else return false;
+
 }
 
 QString Database::toSqlString(QString a){
-    a.replace("'","''");
-
+    a.replace(QString("'"), QString("''"));
+    qDebug() << "ToSqlQuery" << a;
     return a;
 }

@@ -48,15 +48,6 @@ void queryTmdb::getID()
     }
     else
     {
- /*   if(tableau.count() == 1)
-    {
-        tmdbID = QString::number(tableau.at(0).value(QString("id")).toDouble());
-    }*/
-    if(tableau.count() == 0)
-    {
-        tmdbID = 550;
-    }
-
         QStringList listTitre;
         for(int i = 0; i < tableau.count(); i++)
         {
@@ -69,7 +60,6 @@ void queryTmdb::getID()
         {
             tmdbID = QString::number(tableau.at(temp.getItem()).value(QString("id")).toDouble());
         }
-
  }
 
     url = "http://private-4021-themoviedb.apiary.io/3/movie/"+ tmdbID +"?api_key=" + api_key + "&language=fr";

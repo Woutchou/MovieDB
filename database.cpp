@@ -2,14 +2,18 @@
 #include "movie.h"
 #include <QDebug>
 #include <QtSql>
-
+#include <QErrorMessage>
 #include <QDebug>
 
 using namespace std;
 
 Database::Database(QString DBname){
     database = QSqlDatabase::addDatabase("QSQLITE");
-    this->open(DBname);
+    QErrorMessage *error;
+    error = new QErrorMessage();
+    error->showMessage("hi there");
+    error->show();
+    qDebug() << open(DBname);
 }
 
 bool Database::open(QString DBname) {
@@ -21,8 +25,10 @@ QList<Movie> Database::getMovieList(){
     QList<Movie> response;
     QSqlQuery listQuery;
 
-    if(!listQuery.exec("SELECT * FROM movieDB;")) {
-        qDebug() << "Error";
+    if(!listQuery.exec("SELECT * FROM movie;")) {
+
+        QErrorMessage error;
+        error.showMessage(listQuery.lastError().databaseText());
         return response;
     }
 

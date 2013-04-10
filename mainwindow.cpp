@@ -200,7 +200,7 @@ QString MainWindow::cleanName(QString fileName) {
         }
     }
 
-    qDebug() << "First Index :" << firstSpamIndex;
+    //qDebug() << "First Index :" << firstSpamIndex;
 
     if(firstSpamIndex!=-1 && firstSpamIndex!=100) {
         cleanedFileName.remove(firstSpamIndex, cleanedFileName.count()-1);

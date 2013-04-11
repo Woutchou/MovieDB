@@ -40,7 +40,7 @@ class MainWindow : public QWidget // On hérite de QWidget (IMPORTANT)
 
 
     private:
-    QPushButton *m_bouton;
+    QPushButton *m_button;
     QGridLayout *mainLayout;
     QLabel *title;
     QLineEdit *mTitle;
@@ -53,8 +53,9 @@ class MainWindow : public QWidget // On hérite de QWidget (IMPORTANT)
     QListView *liste;
     QLabel *poster;
 
+
     Database *sqlDb;
-    QList<Movie> *DB;
+    QStringList listFilm;
 
     queryTmdb *temp;
     Movie selectedMovie;

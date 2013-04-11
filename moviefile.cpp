@@ -14,8 +14,7 @@ movieFile::movieFile(QString name, QDir d, Movie m) : dir(d), associatedMovie(m)
 
 void movieFile::getInfo()
 {
-    qWarning() << file->fileName();
-    qWarning() << dir.path();
+
 }
 
 void movieFile::rename(QString newName)
@@ -26,7 +25,7 @@ void movieFile::rename(QString newName)
     }
 }
 
-QList<movieFile> movieFile::ListMovie(){
+    QList<movieFile> movieFile::ListMovie(){
 
     QList<movieFile> movieList;
     QDir movieDir = QFileDialog::getExistingDirectory();
@@ -40,7 +39,6 @@ QList<movieFile> movieFile::ListMovie(){
     {
        movieFile f = movieFile(listeFilm[i], movieDir, Movie());
        movieList.append(f);
-       movieList[i].getInfo();
     }
 
    return movieList;

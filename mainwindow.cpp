@@ -13,6 +13,7 @@
 #include <QDebug>
 #include <QByteArray>
 #include <QJsonObject>
+#include <QButtonGroup>
 #include <QJsonArray>
 #include <QListView>
 #include <QFileSystemModel>
@@ -21,26 +22,39 @@
 #include <QtNetwork>
 #include <QMessageBox>
 #include <QtSql>
+#include <QProgressDialog>
 
 MainWindow::MainWindow() : QWidget()
 {
-    Database::toSqlString("Le 26 avril 2003, Aron Ralston, jeune homme de vingt-sept ans, se met en route pour une randonnée dans les gorges de l’Utah.Il est seul et n’a prévenu personne de son excursion. Alpiniste expérimenté, il collectionne les plus beaux sommets de la région.Pourtant, au fin fond d’un canyon reculé, l’impensable survient : au-dessus de lui un rocher se détache et emprisonne son bras dans le mur de rocaille. Le voilà pris au piège, menacé de déshydratation et d’hypothermie, en proie à des hallucinations…Il parle à son ex petite amie, sa famille, et se demande si les deux filles qu’il a rencontrées dans le canyon juste avant son accident seront les dernières. Cinq jours plus tard, comprenant que les secours n’arriveront pas, il va devoir prendre la plus grave décision de son existence...");
+
     sqlDb = new Database("data1.db");
 
-    DB = new QList<Movie>(sqlDb->getMovieList());
+
 
     QList<movieFile> listeFilms = movieFile::ListMovie();
-    QStringList listFilm;
 
-    for(int i = 0; i < listeFilms.count(); i++)
-    {
-        listFilm.append(listeFilms.value(i).getName());
+    QProgressDialog progress("Scanning movies...", "Abort scan", 0, listeFilms.count(), this);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.setAutoClose(false);
+    QTimer essai;
 
-       // temp = new queryTmdb(this, listeFilms.value(i).getName());
+    for (int i = 0; i < listeFilms.count(); i++) {
+            progress.setValue(i);
+            listFilm.append(listeFilms.value(i).getName());
+            temp = new queryTmdb(this, MainWindow::cleanName(listeFilms.value(i).getName()));
+            QObject::connect(temp, SIGNAL(endRequest(Movie)), this, SLOT(insertMovie(Movie)));
+
+            if (progress.wasCanceled())
+                break;
 
     }
+    essai.stop();
+        progress.setValue(listeFilms.count());
 
 
+
+
+    m_button = new QPushButton("Choisir un dossier");
 
     title = new QLabel("Titre :", this);
     title->setAlignment(Qt::AlignRight);
@@ -83,6 +97,7 @@ MainWindow::MainWindow() : QWidget()
     liste->show();
 
     mainLayout->addWidget(liste,0,0,6,1);
+    mainLayout->addWidget(m_button,5,1,1,1);
 
     QObject::connect(liste,SIGNAL(doubleClicked(QModelIndex)), this, SLOT(listeClicked(QModelIndex)));
     QObject::connect(itemModel, SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(changeItem(QModelIndex,QModelIndex)));
@@ -94,8 +109,7 @@ void MainWindow::listeClicked(QModelIndex a)
     temp = new queryTmdb(this, MainWindow::cleanName(a.data().toString()));
     QObject::connect(temp, SIGNAL(endRequest(Movie)), this, SLOT(insertMovie(Movie)));
 
-    DB->clear();
-    DB = new QList<Movie>(sqlDb->getMovieList());
+
     mTitle->repaint();
     mLenght->repaint();
     mSynopsis->repaint();
@@ -124,28 +138,8 @@ void MainWindow::telechargement()
 
 }
 
-void MainWindow::enregistrer()
-{/*
-    QNetworkReply *r = qobject_cast<QNetworkReply*>(sender()); //On récupère la réponse du serveur
-    QFile f("fichier.txt"); //On ouvre le fichier
+void MainWindow::enregistrer() {
 
-    QJsonDocument jFilm = QJsonDocument::fromJson(r->readAll());
-
-
-    qWarning() << jFilm.isNull();
-
-            if ( f.open(QIODevice::WriteOnly))
-            {
-                f.write(r->readAll()); ////On lit la réponse du serveur que l'on met dans un fichier
-                f.close(); //On ferme le fichier
-                r->deleteLater(); //IMPORTANT : on emploie la fonction deleteLater() pour supprimer la réponse du serveur.
-                //Si vous ne le faites pas, vous risquez des fuites de mémoire ou autre.
-
-                //On indique que tout s'est bien passé
-                QMessageBox::information(this, "Fin de téléchargement", "Téléchargement terminé !");
-            }
-
-*/
 
 }
 
@@ -164,7 +158,7 @@ void MainWindow::setSelelectedMovie(Movie current) {
 
 void MainWindow::changeItem(QModelIndex a, QModelIndex old)
 {
-    this->setSelelectedMovie(sqlDb->getMovie(a.data().toString()));
+    this->setSelelectedMovie(sqlDb->getMovie(cleanName(a.data().toString())));
 
     mTitle->setText(selectedMovie.getTitle());
     mLenght->setText(QString::number(selectedMovie.getRuntime()));

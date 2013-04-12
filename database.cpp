@@ -16,7 +16,22 @@ Database::Database(QString DBname){
 
 bool Database::open(QString DBname) {
     database.setDatabaseName(DBname);
-    return database.open();
+    if(database.open()) {
+        QSqlQuery createQuery;
+        createQuery.prepare("CREATE TABLE IF NOT EXISTS movieDB (tmdb_ID INTEGER UNIQUE NOT NULL PRIMARY KEY, title TEXT NOT NULL,"
+                            "originalTitle TEXT, Year INTEGER, Runtime INTEGER, Synopsis TEXT);");
+        if(!createQuery.exec()) {
+            qDebug() << createQuery.lastError().databaseText();
+            return false;
+        }else {
+            return true;
+        }
+
+    }else {
+        qDebug() << database.lastError().databaseText();
+        return false;
+    }
+
 }
 
 QList<Movie> Database::getMovieList(){

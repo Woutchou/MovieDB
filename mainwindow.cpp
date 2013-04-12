@@ -41,8 +41,8 @@ MainWindow::MainWindow() : QWidget()
     for (int i = 0; i < listeFilms.count(); i++) {
             progress.setValue(i);
             listFilm.append(listeFilms.value(i).getName());
-            temp = new queryTmdb(this, MainWindow::cleanName(listeFilms.value(i).getName()));
-            QObject::connect(temp, SIGNAL(endRequest(Movie)), this, SLOT(insertMovie(Movie)));
+          //  temp = new queryTmdb(this, MainWindow::cleanName(listeFilms.value(i).getName()));
+           // QObject::connect(temp, SIGNAL(endRequest(Movie)), this, SLOT(insertMovie(Movie)));
 
             if (progress.wasCanceled())
                 break;

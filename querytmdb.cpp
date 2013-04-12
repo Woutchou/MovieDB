@@ -45,15 +45,11 @@ void queryTmdb::getID()
     if(tableau.count() == 1)
     {
         tmdbID = QString::number(tableau.at(0).value(QString("id")).toDouble());
-        url = "http://private-4021-themoviedb.apiary.io/3/movie/"+ tmdbID +"?api_key=" + api_key + "&language=fr";
-        request.setUrl(url);
-        reply = manager->get(request);
 
-        connect(reply, SIGNAL(finished()), this, SLOT(requestMovie()));
     }
     else
     {
-       /* QStringList listTitre;
+        QStringList listTitre;
         for(int i = 0; i < tableau.count(); i++)
         {
             listTitre.push_back(tableau.at(i).value(QString("original_title")).toString() + " (" + tableau.at(i).value(QString("release_date")).toString()+ ")");
@@ -64,22 +60,25 @@ void queryTmdb::getID()
         if(temp.exec())
         {
             tmdbID = QString::number(tableau.at(temp.getItem()).value(QString("id")).toDouble());
-        }*/
+        }
  }
 
-   /* url = "http://private-4021-themoviedb.apiary.io/3/movie/"+ tmdbID +"?api_key=" + api_key + "&language=fr";
+    url = "http://private-4021-themoviedb.apiary.io/3/movie/"+ tmdbID +"?api_key=" + api_key + "&language=fr";
     request.setUrl(url);
     reply = manager->get(request);
 
-    connect(reply, SIGNAL(finished()), this, SLOT(requestMovie()));*/
+    connect(reply, SIGNAL(finished()), this, SLOT(requestMovie()));
 
 }
 
 void queryTmdb::requestMovie()
 {
     QNetworkReply *r = qobject_cast<QNetworkReply*>(sender());
-    QJsonDocument tempMovie = QJsonDocument::fromJson(r->readAll());
+    QString temp = r->readAll();
+    QJsonDocument tempMovie = QJsonDocument::fromJson(temp.toLatin1());
     QJsonObject queryResponse = tempMovie.object();
+
+    qDebug() << temp;
 
 
     nMovie = Movie(queryResponse);

@@ -32,6 +32,7 @@ class MainWindow : public QWidget // On hérite de QWidget (IMPORTANT)
     void listeClicked(QModelIndex a);
     void telechargement();
     void enregistrer();
+    void promptTime();
 
     void insertMovie(Movie);
     void changeItem(QModelIndex, QModelIndex);

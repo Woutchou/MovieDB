@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     moviefile.cpp \
     qlistdialog.cpp \
     database.cpp \
-    querytmdb.cpp
+    querytmdb.cpp \
+    moviedisplayinfo.cpp
 
 HEADERS  += mainwindow.h \
             movie.h \
@@ -29,6 +30,8 @@ HEADERS  += mainwindow.h \
     querytmdb.h \
     qlistdialog.h \
     querytmdb.h \
-    database.h
+    database.h \
+    moviedisplayinfo.h
 
-FORMS    +=
+FORMS    += \
+    moviedisplayinfo.ui

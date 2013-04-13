@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QtNetwork>
 #include "movie.h"
+#include "database.h"
 
 const QString api_key = "5f9d81122d9185f28c936d1d257e06d9";
 
@@ -15,6 +16,7 @@ public:
     queryTmdb(QObject *parent = 0, QString fileName = "default");
     Movie getMovie();
     static int getID(QString fileName);
+    static void scanFolder(QDir moviesFolder, Database *db);
     
 signals:
     void endRequest(Movie);
@@ -29,7 +31,7 @@ private:
     QUrl                   url;
     QNetworkReply         *reply;
     QString                tmdbID;
-    Movie                 nMovie;
+    Movie                  nMovie;
 
     
 };

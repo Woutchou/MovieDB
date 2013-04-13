@@ -11,7 +11,6 @@ class movieFile
 public:
     movieFile();
     movieFile(QString name, QDir d, Movie m);
-    void getInfo();
     QString getName();
     void rename(QString newName);
 

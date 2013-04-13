@@ -14,8 +14,8 @@ public:
     QList<Movie> getMovieList();
     Movie getMovie(QString Title);
     bool insertMovie(Movie m);
+    bool firstInsert(QString filePath);
     bool exist(Movie m);
-    static QString toSqlString(QString);
 
 
 private:

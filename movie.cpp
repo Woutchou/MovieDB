@@ -14,12 +14,16 @@ Movie::Movie() : title("Defaut title"), runtime(0), synopsis("Default synopsis")
 }
 
 Movie::Movie(QJsonObject newMovie) {
+
     title = newMovie.value(QString("title")).toString();
     originalTitle = newMovie.value(QString("original_title")).toString();
     runtime = newMovie.value(QString("runtime")).toDouble();
     synopsis = newMovie.value(QString("overview")).toString();
     tmdbId = newMovie.value(QString("id")).toDouble();
     year = newMovie.value(QString("release_date")).toString().left(4).toInt();
+
+    qDebug() << "Title" << title;
+    qDebug() << "OriginalTitle" << originalTitle;
 
 }
 

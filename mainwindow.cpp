@@ -3,6 +3,7 @@
 #include "moviefile.h"
 #include "database.h"
 #include "querytmdb.h"
+#include "moviedisplayinfo.h"
 
 #include <QFile>
 #include <QString>
@@ -23,34 +24,28 @@
 #include <QMessageBox>
 #include <QtSql>
 #include <QProgressDialog>
+#include <QTimer>
+#include <QPushButton>
 
 MainWindow::MainWindow() : QWidget()
 {
-
+  //  MovieDisplayInfo *essai;
+  //  essai = new MovieDisplayInfo(this);
     sqlDb = new Database("data1.db");
 
+    queryTmdb::scanFolder(QDir("E:/Films"), sqlDb);
 
-
+    /*
+    QTime t;
+    t.start();
     QList<movieFile> listeFilms = movieFile::ListMovie();
-
-    QProgressDialog progress("Scanning movies...", "Abort scan", 0, listeFilms.count(), this);
-    progress.setWindowModality(Qt::WindowModal);
-    progress.setAutoClose(false);
-    QTimer essai;
-
     for (int i = 0; i < listeFilms.count(); i++) {
-            progress.setValue(i);
             listFilm.append(listeFilms.value(i).getName());
-          //  temp = new queryTmdb(this, MainWindow::cleanName(listeFilms.value(i).getName()));
-           // QObject::connect(temp, SIGNAL(endRequest(Movie)), this, SLOT(insertMovie(Movie)));
-
-            if (progress.wasCanceled())
-                break;
-
+            temp = new queryTmdb(this, MainWindow::cleanName(listeFilms.value(i).getName()));
+            QObject::connect(temp, SIGNAL(endRequest(Movie)), this, SLOT(insertMovie(Movie)));
     }
-    essai.stop();
-        progress.setValue(listeFilms.count());
 
+    qDebug() << listeFilms.count()*2 << "requetes effectues en " << t.elapsed() << "ms";*/
 
 
 
@@ -70,10 +65,9 @@ MainWindow::MainWindow() : QWidget()
 
     QGridLayout *mainLayout = new QGridLayout;
     this->setLayout(mainLayout);
-    poster = new QLabel("",this);
-    poster->setPixmap(QPixmap("skyfall.jpg"));
 
-    mainLayout->addWidget(poster, 0,1,4,1);
+
+
     mainLayout->addWidget(title, 0,2,1,1);
     mainLayout->addWidget(mTitle,0,3,1,1);
     mainLayout->addWidget(lenght, 1,2,1,1);
@@ -87,20 +81,21 @@ MainWindow::MainWindow() : QWidget()
 
     model->setStringList(listFilm);
     liste = new QListView(this);
-    liste->move(50,50);
     liste->setMaximumWidth(300);
     liste->setModel(model);
-
-
     QItemSelectionModel *itemModel = liste->selectionModel();
 
-    liste->show();
+    mainLayout->addWidget(liste,0,0,1,1);
 
-    mainLayout->addWidget(liste,0,0,6,1);
-    mainLayout->addWidget(m_button,5,1,1,1);
+
 
     QObject::connect(liste,SIGNAL(doubleClicked(QModelIndex)), this, SLOT(listeClicked(QModelIndex)));
     QObject::connect(itemModel, SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(changeItem(QModelIndex,QModelIndex)));
+}
+
+
+void MainWindow::promptTime() {
+    mTitle->setText(QTime::currentTime().toString());
 }
 
 

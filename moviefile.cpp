@@ -10,12 +10,10 @@ movieFile::movieFile()
 movieFile::movieFile(QString name, QDir d, Movie m) : dir(d), associatedMovie(m)
 {
     file = new QFile(name);
+    associatedMovie.setTitle(name);
+  //  qDebug() << associatedMovie.getTitle();
 }
 
-void movieFile::getInfo()
-{
-
-}
 
 void movieFile::rename(QString newName)
 {
@@ -25,11 +23,12 @@ void movieFile::rename(QString newName)
     }
 }
 
-    QList<movieFile> movieFile::ListMovie(){
+QList<movieFile> movieFile::ListMovie(){
 
     QList<movieFile> movieList;
-    QDir movieDir = QFileDialog::getExistingDirectory();
+    QDir movieDir = QDir("J:/Vidéo");
 
+            //QFileDialog::getExistingDirectory();
 
     QStringList filter;
     filter << "*.avi" << "*.mp4" ;
@@ -37,7 +36,7 @@ void movieFile::rename(QString newName)
 
    for(int i = 0; i < listeFilm.size(); i++)
     {
-       movieFile f = movieFile(listeFilm[i], movieDir, Movie());
+       movieFile f = movieFile(listeFilm.value(i), movieDir, Movie());
        movieList.append(f);
     }
 
@@ -49,3 +48,5 @@ QString movieFile::getName()
     QString tempName = file->fileName().left(file->fileName().size()-4);
     return tempName;
 }
+
+

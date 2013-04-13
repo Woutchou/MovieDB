@@ -18,8 +18,8 @@ bool Database::open(QString DBname) {
     database.setDatabaseName(DBname);
     if(database.open()) {
         QSqlQuery createQuery;
-        createQuery.prepare("CREATE TABLE IF NOT EXISTS movieDB (tmdb_ID INTEGER UNIQUE NOT NULL PRIMARY KEY, title TEXT NOT NULL,"
-                            "originalTitle TEXT, Year INTEGER, Runtime INTEGER, Synopsis TEXT);");
+        createQuery.prepare("CREATE TABLE IF NOT EXISTS movieDB (tmdb_ID INTEGER , title TEXT ,"
+                            "originalTitle TEXT, Year INTEGER, Runtime INTEGER, Synopsis TEXT, filePath TEXT UNIQUE NOT NULL PRIMARY KEY);");
         if(!createQuery.exec()) {
             qDebug() << createQuery.lastError().databaseText();
             return false;
@@ -107,6 +107,7 @@ bool Database::insertMovie(Movie m) {
 
         if(!insertQuery.exec()) {
             qDebug() << insertQuery.lastError().databaseText();
+            qDebug() << insertQuery.lastQuery();
             return false;
         }else return true;
     }else return false;
@@ -125,10 +126,15 @@ bool Database::exist(Movie m) {
 
 }
 
+bool Database::firstInsert(QString filePath) {
 
-QString Database::toSqlString(QString a){
-    a.replace(QString("'"), QString("''"));
-    a.replace(QString("’"), QString("''"));
-    qDebug() << "ToSqlQuery" << a;
-    return a;
+    QSqlQuery insertQuery;
+    insertQuery.prepare("INSERT INTO movieDB (filePath) VALUES (:filePath);");
+    insertQuery.bindValue(":filePath", filePath);
+
+    if(!insertQuery.exec()) {
+        qDebug() << insertQuery.lastError().databaseText();
+        return false;
+    }else return true;
+
 }
